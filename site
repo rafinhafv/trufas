@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trufas Gourmet</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        header { background: chocolate; padding: 20px; color: white; font-size: 24px; }
+        .menu { display: flex; flex-wrap: wrap; justify-content: center; }
+        .produto { border: 1px solid #ddd; margin: 10px; padding: 10px; width: 200px; }
+        .contato { margin-top: 20px; }
+        .pedido { margin-top: 20px; padding: 20px; background: #f8f8f8; }
+        button { background: chocolate; color: white; padding: 10px; border: none; cursor: pointer; }
+        button:hover { background: darkbrown; }
+    </style>
+</head>
+<body>
+    <header>Trufas e Delícias da Jaque</header>
+    
+    <h2>Nossos Sabores</h2>
+    <div class="menu">
+        <div class="produto">
+            <h3>Trufa de Brigadeiro Preto</h3>
+            <p>R$ 3,00</p>
+            <input type="number" id="quantidade-preto" min="1" value="1">
+            <button onclick="adicionarAoCarrinho('Trufa de Brigadeiro Preto', 3.00, 'quantidade-preto')">Pedir</button>
+        </div>
+        <div class="produto">
+            <h3>Trufa de Brigadeiro Branco</h3>
+            <p>R$ 3,00</p>
+            <input type="number" id="quantidade-branco" min="1" value="1">
+            <button onclick="adicionarAoCarrinho('Trufa de Brigadeiro Branco', 3.00, 'quantidade-branco')">Pedir</button>
+        </div>
+        <div class="produto">
+            <h3>Trufa de Leite Ninho</h3>
+            <p>R$ 3,00</p>
+            <input type="number" id="quantidade-ninho" min="1" value="1">
+            <button onclick="adicionarAoCarrinho('Trufa de Leite Ninho', 3.00, 'quantidade-ninho')">Pedir</button>
+        </div>
+        <div class="produto">
+            <h3>Trufa de Maracujá</h3>
+            <p>R$ 3,00</p>
+            <input type="number" id="quantidade-maracuja" min="1" value="1">
+            <button onclick="adicionarAoCarrinho('Trufa de Maracujá', 3.00, 'quantidade-maracuja')">Pedir</button>
+        </div>
+        <div class="produto">
+            <h3>Trufa de 7Belo</h3>
+            <p>R$ 3,00</p>
+            <input type="number" id="quantidade-7belo" min="1" value="1">
+            <button onclick="adicionarAoCarrinho('Trufa de 7Belo', 3.00, 'quantidade-7belo')">Pedir</button>
+        </div>
+    </div>
+    
+    <div class="pedido">
+        <h2>Seu Pedido</h2>
+        <ul id="listaPedidos"></ul>
+        <p id="totalPedido">Total: R$ 0,00</p>
+        <button onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>
+    </div>
+    
+    <div class="contato">
+        <h2>Entre em Contato</h2>
+        <p>Telefone: (48)98813-4214</p>
+        <p>Endereço: Av. Izídio Carlos Peixer, 2745</p>
+    </div>
+    
+    <script>
+        let carrinho = [];
+
+        function adicionarAoCarrinho(nome, preco, inputId) {
+            let quantidade = parseInt(document.getElementById(inputId).value);
+            carrinho.push({ nome, preco, quantidade });
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            let lista = document.getElementById('listaPedidos');
+            let total = document.getElementById('totalPedido');
+            lista.innerHTML = '';
+            let totalValor = 0;
+            
+            carrinho.forEach(item => {
+                let li = document.createElement('li');
+                li.textContent = `${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
+                lista.appendChild(li);
+                totalValor += item.preco * item.quantidade;
+            });
+            
+            total.textContent = `Total: R$ ${totalValor.toFixed(2)}`;
+        }
+
+        function finalizarPedido() {
+            if (carrinho.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+            
+            let mensagem = "Olá, gostaria de fazer um pedido:\n";
+            carrinho.forEach(item => {
+                mensagem += `- ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
+            });
+            let total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            mensagem += `\nTotal: R$ ${total.toFixed(2)}`;
+            
+            let telefone = "5548988134214"; // Número do WhatsApp sem espaços ou caracteres especiais
+            let url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
